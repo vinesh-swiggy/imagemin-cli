@@ -33,6 +33,7 @@
 		"arrify": "^2.0.1",
 		"get-stdin": "^7.0.0",
 		"imagemin": "^7.0.0",
+		"imagemin-optipng": "^7.1.0",
 		"imagemin-webp": "^5.1.0",
 		"meow": "^5.0.0",
 		"ora": "^3.0.0",

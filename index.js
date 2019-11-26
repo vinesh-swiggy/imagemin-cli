@@ -23,13 +23,9 @@ const cli = meow(`
 	  $ cat foo.png | imagemin > foo-optimized.png
 	  $ imagemin --plugin=pngquant foo.png > foo-optimized.png
 `, {
-	plugin: {
+	workingDir: {
 		type: 'string',
-		alias: 'p'
-	},
-	outDir: {
-		type: 'string',
-		alias: 'o'
+		alias: 'w'
 	}
 });
 
@@ -39,7 +35,7 @@ const fileSize = async (filePath) => {
 	return fs.statSync(filePath)[`size`];
 };
 
-const runBulk = async (inputs) => {
+const runBulk = async (inputs, { workingDir = "" } = {}) => {
 	const image_files = inputs.filter(input => extn_check_reg_ex.test(input));
 	let original_size = 0;
 	let compressed_size = 0;
@@ -47,7 +43,7 @@ const runBulk = async (inputs) => {
 		const ext = Path.extname(image_file);
 		const destPath = image_file.replace(ext, '.webp');
 
-		await exec(`node cli.js ${image_file} > ${destPath}`);
+		await exec(`node ${workingDir}cli.js ${image_file} > ${destPath}`);
 
 		const source_size = await fileSize(image_file);
 		const dest_size = await fileSize(destPath);
@@ -71,5 +67,5 @@ if (cli.input.length === 0 && process.stdin.isTTY) {
 }
 
 (async () => {
-	await runBulk(cli.input);
+	await runBulk(cli.input, cli.flags);
 })();
